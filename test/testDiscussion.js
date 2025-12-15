@@ -181,4 +181,82 @@ describe("Discussion", function() {
 			assert.strictEqual(discussion.showButtons, true);
 		});
 	});
+	describe("URL update after closing:", function() {
+		describe("for CFD (venue without individual subpages):", function() {
+			let discussion, originalHash;
+			beforeEach(function() {
+				originalHash = window.location.hash;
+				discussion = new Discussion({
+					id: "123",
+					venue: Venue.Cfd(),
+					pages: [mw.Title.newFromText("Category:Foo")],
+					discussionPageName: "Wikipedia:Categories for discussion/Log/2020 June 1",
+					sectionHeader: "Category:Foo",
+					sectionNumber: "1",
+					firstCommentDate: new Date(2020, 5, 1),
+					isRelisted: false,
+				});
+				// Simulate opening the window first (which sets this.type)
+				discussion.setWindowOpened("close");
+			});
+
+			afterEach(function() {
+				if (originalHash) {
+					window.history.replaceState(null, "", originalHash);
+				} else {
+					window.history.replaceState(null, "", "#");
+				}
+			});
+
+			it("updates URL with section hash on successful close", function() {
+				discussion.setClosedWindowData({success: true, result: "keep"});
+				assert.strictEqual(window.location.hash, "#Category:Foo");
+			});
+
+			it("does not update URL when cancelled", function() {
+				const hashBeforeCancel = window.location.hash;
+				discussion.setClosedWindowData();
+				assert.strictEqual(window.location.hash, hashBeforeCancel);
+			});
+
+			it("does not update URL when aborted", function() {
+				const hashBeforeAbort = window.location.hash;
+				discussion.setClosedWindowData({aborted: true});
+				assert.strictEqual(window.location.hash, hashBeforeAbort);
+			});
+		});
+
+		describe("for AFD (venue with individual subpages):", function() {
+			let discussion, originalHash;
+			beforeEach(function() {
+				originalHash = window.location.hash;
+				discussion = new Discussion({
+					id: "123",
+					venue: Venue.Afd(),
+					pages: [mw.Title.newFromText("Foo")],
+					discussionPageName: "Wikipedia:Articles for deletion/Foo",
+					sectionHeader: "Foo",
+					sectionNumber: "1",
+					firstCommentDate: new Date(2020, 5, 1),
+					isRelisted: false,
+				});
+				// Simulate opening the window first (which sets this.type)
+				discussion.setWindowOpened("close");
+			});
+
+			afterEach(function() {
+				if (originalHash) {
+					window.history.replaceState(null, "", originalHash);
+				} else {
+					window.history.replaceState(null, "", "#");
+				}
+			});
+
+			it("does not update URL on successful close (has individual subpages)", function() {
+				const hashBeforeClose = window.location.hash;
+				discussion.setClosedWindowData({success: true, result: "keep"});
+				assert.strictEqual(window.location.hash, hashBeforeClose);
+			});
+		});
+	});
 });

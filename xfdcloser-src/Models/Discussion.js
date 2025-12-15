@@ -1,7 +1,7 @@
 
 import { OO } from "../../globals";
 import RedirectList from "./RedirectList";
-import { makeLink, encodeForWikilinkFragment } from "../util";
+import { makeLink, encodeForWikilinkFragment, encodeForUrl } from "../util";
 // <nowiki>
 class Discussion {
 	/**
@@ -118,6 +118,11 @@ class Discussion {
 			const as = windowData.result ? ` as "${windowData.result}"` : "";
 			this.status = `<strong>${actioned}</strong>${as} (reload page to see the actual ${this.type})`;
 			this.actioned = true;
+			// Update browser URL with section hash for venues that use sections (not individual subpages)
+			if ( !this.venue.hasIndividualSubpages && this.sectionHeader ) {
+				const sectionHash = "#" + encodeForUrl(this.sectionHeader);
+				window.history.replaceState(null, "", sectionHash);
+			}
 			break;
 		}
 		default: // cancelled
