@@ -182,10 +182,25 @@ describe("Discussion", function() {
 		});
 	});
 	describe("URL update after closing:", function() {
+		let originalHash;
+		
+		beforeEach(function() {
+			originalHash = window.location.hash;
+		});
+
+		afterEach(function() {
+			// Restore original hash or clear it completely if it was empty
+			if (originalHash) {
+				window.history.replaceState(null, "", originalHash);
+			} else {
+				// In test environment, just clear the hash without constructing full URL
+				window.location.hash = "";
+			}
+		});
+
 		describe("for CFD (venue without individual subpages):", function() {
-			let discussion, originalHash;
+			let discussion;
 			beforeEach(function() {
-				originalHash = window.location.hash;
 				discussion = new Discussion({
 					id: "123",
 					venue: Venue.Cfd(),
@@ -198,14 +213,6 @@ describe("Discussion", function() {
 				});
 				// Simulate opening the window first (which sets this.type)
 				discussion.setWindowOpened("close");
-			});
-
-			afterEach(function() {
-				if (originalHash) {
-					window.history.replaceState(null, "", originalHash);
-				} else {
-					window.history.replaceState(null, "", "#");
-				}
 			});
 
 			it("updates URL with section hash on successful close", function() {
@@ -227,9 +234,8 @@ describe("Discussion", function() {
 		});
 
 		describe("for AFD (venue with individual subpages):", function() {
-			let discussion, originalHash;
+			let discussion;
 			beforeEach(function() {
-				originalHash = window.location.hash;
 				discussion = new Discussion({
 					id: "123",
 					venue: Venue.Afd(),
@@ -242,14 +248,6 @@ describe("Discussion", function() {
 				});
 				// Simulate opening the window first (which sets this.type)
 				discussion.setWindowOpened("close");
-			});
-
-			afterEach(function() {
-				if (originalHash) {
-					window.history.replaceState(null, "", originalHash);
-				} else {
-					window.history.replaceState(null, "", "#");
-				}
 			});
 
 			it("does not update URL on successful close (has individual subpages)", function() {
