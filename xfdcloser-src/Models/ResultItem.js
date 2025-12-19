@@ -18,6 +18,7 @@ class ResultItem {
 	 *  @param {Boolean} [config.deleteFirstResult] 
 	 *  @param {String} [config.targetPageName] 
 	 *  @param {String} [config.customResultText] 
+	 *  @param {String} [config.venueType] venue type (e.g. "cfd", "afd")
 	 * 
 	 */
 	constructor(config) {
@@ -32,6 +33,7 @@ class ResultItem {
 		this.deleteFirstResult = config.deleteFirstResult || false;
 		this.targetPageName = config.targetPageName || "";
 		this.customResultText = config.customResultText || "";
+		this.venueType = config.venueType || "";
 	}
 	
 	// Aliases
@@ -227,6 +229,10 @@ class ResultItem {
 	}
 
 	setTargetPageName(target) {
+		// For CFD venue, default to Category namespace if no namespace is specified
+		if ( this.venueType === "cfd" && target && !target.includes(":") ) {
+			target = "Category:" + target;
+		}
 		if ( this.targetPageName === target ) { return false; }
 		this.targetPageName = target;
 		this.emit("update");

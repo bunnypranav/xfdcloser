@@ -275,4 +275,47 @@ describe("ResultItem", function() {
 		model.setCustomResultText("Qux");
 		assert.strictEqual(model.isValid(), true, "Valid with custom result and custom result text");
 	});
+	describe("CFD venue", function() {
+		let cfdModel;
+		beforeEach(function() {
+			cfdModel = new ResultItem({
+				availableResults: getRelevantResults("cfd", true),
+				venueType: "cfd"
+			});
+		});
+		it("defaults to Category namespace when no namespace is specified for rename", function() {
+			cfdModel.setSelectedResultName("rename");
+			cfdModel.setTargetPageName("Foo");
+			assert.strictEqual(cfdModel.targetPageName, "Category:Foo", "Category namespace prepended");
+			assert.strictEqual(cfdModel.targetIsValid, true, "Target is valid");
+		});
+		it("defaults to Category namespace when no namespace is specified for merge", function() {
+			cfdModel.setSelectedResultName("merge");
+			cfdModel.setTargetPageName("Bar");
+			assert.strictEqual(cfdModel.targetPageName, "Category:Bar", "Category namespace prepended");
+			assert.strictEqual(cfdModel.targetIsValid, true, "Target is valid");
+		});
+		it("does not modify target when namespace is already specified", function() {
+			cfdModel.setSelectedResultName("rename");
+			cfdModel.setTargetPageName("Category:Baz");
+			assert.strictEqual(cfdModel.targetPageName, "Category:Baz", "Category namespace not duplicated");
+			assert.strictEqual(cfdModel.targetIsValid, true, "Target is valid");
+		});
+		it("does not modify target when different namespace is specified", function() {
+			cfdModel.setSelectedResultName("rename");
+			cfdModel.setTargetPageName("Wikipedia:Foo");
+			assert.strictEqual(cfdModel.targetPageName, "Wikipedia:Foo", "Different namespace not changed");
+			assert.strictEqual(cfdModel.targetIsValid, true, "Target is valid");
+		});
+		it("handles interwiki prefixes correctly", function() {
+			cfdModel.setSelectedResultName("rename");
+			cfdModel.setTargetPageName("c:Category:Foo");
+			assert.strictEqual(cfdModel.targetPageName, "c:Category:Foo", "Interwiki prefix with namespace preserved");
+		});
+		it("formats target correctly with Category namespace", function() {
+			cfdModel.setSelectedResultName("rename");
+			cfdModel.setTargetPageName("TestCategory");
+			assert.strictEqual(cfdModel.getFormattedTarget(), "[[:Category:TestCategory]]", "Formatted with colon prefix");
+		});
+	});
 });

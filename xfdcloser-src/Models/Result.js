@@ -48,13 +48,13 @@ class Result {
 		this.userIsSysop = config.userIsSysop;
 		const availableResults = getRelevantResults(this.discussion.venue.type, config.userIsSysop);
 
-		this.singleModeResult = new ResultItem({availableResults});
+		this.singleModeResult = new ResultItem({availableResults, venueType: this.discussion.venue.type});
 		this.singleModeResult.connect(this, {
 			update: ["emit", "update"],
 			softDeleteSelect: "onSoftDeleteSelect"
 		});
 
-		this.multimodeResults = new ResultList({availableResults, pageNames: this.discussion.pagesNames});
+		this.multimodeResults = new ResultList({availableResults, pageNames: this.discussion.pagesNames, venueType: this.discussion.venue.type});
 		this.multimodeResults.connect(this, {update: ["emit", "update"]});
 
 		this.resultSummary = "";
