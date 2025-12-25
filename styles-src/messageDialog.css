@@ -1,0 +1,57 @@
+/* == MessageDialog dark mode support == */
+
+/* Dark mode styles for OOUI MessageDialog components */
+@media (prefers-color-scheme: dark) {
+	/* Dialog window background */
+	.oo-ui-messageDialog > .oo-ui-window-frame {
+		background-color: var(--background-color-base, #202122);
+		color: var(--color-base, #eaecf0);
+	}
+
+	/* Dialog content area */
+	.oo-ui-messageDialog .oo-ui-window-body {
+		background-color: var(--background-color-base, #202122);
+	}
+
+	/* Title text */
+	.oo-ui-messageDialog .oo-ui-processDialog-title {
+		color: var(--color-base, #eaecf0);
+	}
+
+	/* Message content area */
+	.oo-ui-messageDialog .oo-ui-window-body .oo-ui-messageDialog-message {
+		color: var(--color-base, #eaecf0);
+	}
+
+	/* Links in message dialog */
+	.oo-ui-messageDialog .oo-ui-messageDialog-message a {
+		color: var(--color-progressive, #72a7f3);
+	}
+
+	.oo-ui-messageDialog .oo-ui-messageDialog-message a:visited {
+		color: var(--color-visited, #a675d4);
+	}
+
+	/* Ensure checkboxes and form elements have proper contrast */
+	.oo-ui-messageDialog .oo-ui-checkboxInputWidget input[type="checkbox"] {
+		background-color: var(--background-color-interactive, #27292d);
+		border-color: var(--border-color-base, #72777d);
+	}
+
+	.oo-ui-messageDialog .oo-ui-labelElement-label {
+		color: var(--color-base, #eaecf0);
+	}
+
+	/* Action buttons footer area */
+	.oo-ui-messageDialog .oo-ui-processDialog-actions {
+		background-color: var(--background-color-neutral-subtle, #27292d);
+		border-top-color: var(--border-color-subtle, #54595d);
+	}
+
+	/* Pre-formatted text (used for code snippets in confirmations) */
+	.oo-ui-messageDialog pre {
+		background-color: var(--background-color-neutral-subtle, #27292d);
+		color: var(--color-base, #eaecf0);
+		border-color: var(--border-color-subtle, #54595d);
+	}
+}
